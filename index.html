@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Custom Image Picker</title>
+
+<style>
+
+  .container {
+    width: 960px;
+    margin: 0 auto;
+    padding: 50px;
+    border: 1px solid #ccc;
+  }
+
+  img {
+    margin: 0 15px 0 0;
+    cursor: pointer;
+  }
+
+  .btn-ms {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    padding: 5px 15px;
+    background-color: red;
+    color: #fff;
+  }
+
+  .btn-ms.active {
+    background-color: green;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div>Time Started: 9:30</div>
+  <h1>Custom Image Picker</h1>
+  <h3>Project Description</h3>
+  <p>Instead of using a border to show which images have been selected, use an alternate thumb e.g. if thumbs are for example image1.png, image2.png, image3.png then when a thumb is selected, it should show the selected version of the thumb i.e. image1-selected.png, myImage-selected.png etc. instead of the regular version.</p>
+
+  <div>Multi Select is <button class="btn-ms">Off</button></div>
+  <p>When Multi Select is <b>On</b> you can selected multiple images and when Multi Select is <b>Off</b> you can select only one image at one time.</p><br>
+  <div><span class="image-detail">Select Any Image</span></div><br><br>
+
+  <div class="thumbs">
+    <img data-orignal-src="thumb1.jpg" class="img" src="thumb1.jpg">
+    <img data-orignal-src="thumb2.jpg" class="img" src="thumb2.jpg">
+    <img data-orignal-src="thumb3.jpg" class="img" src="thumb3.jpg">
+    <img data-orignal-src="thumb4.jpg" class="img" src="thumb4.jpg">
+    <img data-orignal-src="thumb5.jpg" class="img" src="thumb5.jpg">
+  </div>
+
+</div>
+
+<script src="jquery-2.1.4.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+  var image = ''; // image src
+  var imageName = ''; // image name
+  var ext = ''; // image extension
+  var selectedImage = '' // current selected image
+  var ms = false; // Multi Select is off by default
+
+
+  // 
+  // Reset all images src back to their original src
+  // 
+  function resetImages(){
+    $( ".thumbs img" ).each(function( index ) {
+      $(this).attr("src", $(this).attr("data-orignal-src"));
+    });
+  }
+
+
+  // 
+  // Enable, Disable Multi Selection of Images
+  // 
+  $(document).on("click", ".btn-ms", function() {
+    if (ms == false) {
+      ms = true;
+      $(this).addClass("active").html("On");
+    } else {
+      ms = false;
+      $(this).removeClass("active").html("Off");
+    }
+  });
+
+
+  $(document).on("click", ".thumbs img", function() {
+    image = $(this).attr("data-orignal-src");
+    imageName = image.slice(0, -4); // returns 'name of image'
+    ext = image.slice(-4); // returns '.jpg'
+    selectedImage = imageName + "-selected" + ext; // returns 'name of image-selected.jpg'
+
+    if ( $(this).hasClass("selected") ) {
+      if ( ms == false ) {
+        resetImages()
+      }
+      $(this).attr("src", image);
+      $(this).removeClass("selected");
+      $(".image-detail").html("You unselected to: " + image);
+    } else {
+      if ( ms == false ) {
+        resetImages()
+        $(".thumbs img").removeClass("selected");  
+      }
+      $(this).attr("src", selectedImage);
+      $(this).addClass("selected");
+      $(".image-detail").html("You Selected: " + selectedImage);
+    }
+
+  });
+
+});
+
+</script>
+  </body>
+</html>
